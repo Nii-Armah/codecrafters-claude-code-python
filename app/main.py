@@ -11,7 +11,7 @@ BASE_URL = os.getenv("OPENROUTER_BASE_URL", default="https://openrouter.ai/api/v
 
 
 def get_tools() -> list:
-    with open('.tools.json') as tools_file:
+    with open('./tools.json') as tools_file:
         return json.load(tools_file)
 
 
