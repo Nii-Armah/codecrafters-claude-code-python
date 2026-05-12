@@ -20,8 +20,8 @@
   {
     "type": "function",
     "function": {
-    "name": "WriteFile",
-    "description": "Write content to a file",
+      "name": "WriteFile",
+      "description": "Write content to a file",
       "parameters": {
         "type": "object",
         "required": ["file_path", "content"],
