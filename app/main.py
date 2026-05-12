@@ -36,7 +36,7 @@ def main():
     print("Logs from your program will appear here!", file=sys.stderr)
 
     if chat.choices[0].tool_calls:
-        args = json.loads(chat.choices[0].tool_calls[0].function.arguments)
+        args = json.loads(chat.choices[0].get('tool_calls')[0].get('function').get('arguments'))
         with open(args.get('file_path')) as file:
             print(file.read())
 
