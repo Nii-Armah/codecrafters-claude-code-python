@@ -41,15 +41,13 @@ def main():
 
         else:
             for tool_call in chat.choices[0].message.tool_calls:
-                tool_args = chat.choices[0].message.tool_calls[0].function.arguments
+                tool_args = tool_call.function.arguments
                 args = json.loads(tool_args)
                 result = read_file(args.get('file_path'))
                 messages.append({'role': 'tool', 'tool_call_id': tool_call.id, 'content': result})
 
         # You can use print statements as follows for debugging, they'll be visible when running tests.
-        print("Logs from your program will appear here!", file=sys.stderr)
-
-
+        # print("Logs from your program will appear here!", file=sys.stderr)
 
 
 if __name__ == "__main__":
