@@ -36,6 +36,13 @@ def main():
             raise RuntimeError("no choices in response")
 
         message = chat.choices[0].message
+
+        messages.append({
+            'role': 'assistant',
+            'content': None,
+            'tool_calls': message.tool_calls
+        })
+
         if not message.tool_calls:
             print(message.content)
             break
