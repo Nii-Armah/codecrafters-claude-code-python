@@ -1,4 +1,4 @@
-from utils import get_tools
+from .utils import get_tools
 
 import argparse
 import os
