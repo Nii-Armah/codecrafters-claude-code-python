@@ -35,8 +35,8 @@ def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
     print("Logs from your program will appear here!", file=sys.stderr)
 
-    if chat.choices[0].get('tool_calls'):
-        args = json.loads(chat.choices[0].get('tool_calls')[0].get('function').get('arguments'))
+    if chat.choices[0].message.tool_calls:
+        args = json.loads(chat.choices[0].message.tool_calls[0].function.arguments)
         with open(args.get('file_path')) as file:
             print(file.read())
 
