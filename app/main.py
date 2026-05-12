@@ -1,4 +1,4 @@
-from .utils import get_tools
+from .utils import get_tools, read_file
 
 import argparse
 import os
@@ -23,26 +23,35 @@ def main():
     client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
 
     tools = get_tools()
-    chat = client.chat.completions.create(
-        model="anthropic/claude-haiku-4.5",
-        messages=[{"role": "user", "content": args.p}],
-        tools=tools
-    )
+    messages = {'role': 'user', 'content': args.p}
 
-    if not chat.choices or len(chat.choices) == 0:
-        raise RuntimeError("no choices in response")
+    while True:
+        chat = client.chat.completions.create(
+            model="anthropic/claude-haiku-4.5",
+            messages=messages,
+            tools=tools
+        )
 
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!", file=sys.stderr)
+        if not chat.choices or len(chat.choices) == 0:
+            raise RuntimeError("no choices in response")
 
-    if chat.choices[0].message.tool_calls:
-        args = json.loads(chat.choices[0].message.tool_calls[0].function.arguments)
-        with open(args.get('file_path')) as file:
-            print(file.read())
+        if not chat.choices[0].message.tool_calls:
+            print(chat.choices[0].message.content)
+            break
+
+        else:
+            for tool_call in chat.choices[0].message.tool_calls:
+                tool_args = chat.choices[0].message.tool_calls[0].function.arguments
+                args = json.loads(tool_args)
+                file_content = read_file(args.get('file_path'))
+                messages.append({'role': 'tool', 'tool_call_id': tool_call.id, 'content': file_content})
 
 
-    else:
-        print(chat.choices[0].message.content)
+
+        # You can use print statements as follows for debugging, they'll be visible when running tests.
+        print("Logs from your program will appear here!", file=sys.stderr)
+
+
 
 
 if __name__ == "__main__":

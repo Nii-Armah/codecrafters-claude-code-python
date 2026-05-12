@@ -7,3 +7,8 @@ def get_tools() -> list:
 
     with open(tools_path) as tools_file:
         return json.load(tools_file)
+
+
+def read_file(file_path: str) -> str:
+    with open(file_path) as file:
+        return file.read()
