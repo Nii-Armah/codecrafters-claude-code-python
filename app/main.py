@@ -1,13 +1,18 @@
-from app.utils import get_tools
-
 import argparse
 import os
 import sys
+
+import json
 
 from openai import OpenAI
 
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = os.getenv("OPENROUTER_BASE_URL", default="https://openrouter.ai/api/v1")
+
+
+def get_tools() -> list:
+    with open('.tools.json') as tools_file:
+        return json.load(tools_file)
 
 
 def main():
