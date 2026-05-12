@@ -1,8 +1,7 @@
-from .utils import get_tools, read_file
+from .utils import get_tools, read_file, write_file
 
 import argparse
 import os
-import sys
 
 import json
 
@@ -48,13 +47,11 @@ def main():
             break
 
         for tool_call in message.tool_calls:
+            tool = read_file if tool_call.function.name == 'ReadFile' else write_file
             tool_args = tool_call.function.arguments
             args = json.loads(tool_args)
-            result = read_file(args.get('file_path'))
+            result = tool(**args)
             messages.append({'role': 'tool', 'tool_call_id': tool_call.id, 'content': result})
-
-        # You can use print statements as follows for debugging, they'll be visible when running tests.
-        # print("Logs from your program will appear here!", file=sys.stderr)
 
 
 if __name__ == "__main__":
