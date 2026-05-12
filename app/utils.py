@@ -13,6 +13,8 @@ def read_file(file_path: str) -> str:
     with open(file_path) as file:
         return file.read()
 
-def write_file(file_path: str, content: str) -> None:
+def write_file(file_path: str, content: str) -> str:
     with open(file_path, 'w') as file:
         file.write(content)
+
+    return f'Successfully wrote to {file_path}'
