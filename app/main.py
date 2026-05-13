@@ -1,20 +1,20 @@
-from .utils import get_tools_specs, read_file, write_file, run_bash
+from .utils import get_tools_specs, read_file, run_bash, write_file
 
 import argparse
-import os
-
 import json
+import os
 
 from openai import OpenAI
 
-API_KEY = os.getenv("OPENROUTER_API_KEY")
-BASE_URL = os.getenv("OPENROUTER_BASE_URL", default="https://openrouter.ai/api/v1")
+
+API_KEY = os.getenv('OPENROUTER_API_KEY')
+BASE_URL = os.getenv('OPENROUTER_BASE_URL', default='https://openrouter.ai/api/v1')
 
 
-tools = {
+tools_repo = {
     'ReadFile': read_file,
     'WriteFile': write_file,
-    'RunBash': run_bash
+    'RunBash': run_bash,
 }
 
 
@@ -27,7 +27,6 @@ def main():
         raise RuntimeError("OPENROUTER_API_KEY is not set")
 
     client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
-
     messages = [{'role': 'user', 'content': args.p}]
 
     while True:
@@ -52,8 +51,7 @@ def main():
             break
 
         for tool_call in message.tool_calls:
-            tool = tools.get(tool_call.function.name)
-            # tool = read_file if tool_call.function.name == 'ReadFile' else write_file
+            tool = tools_repo.get(tool_call.function.name)
             tool_args = tool_call.function.arguments
             args = json.loads(tool_args)
             result = tool(**args)
