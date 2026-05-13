@@ -20,24 +20,24 @@ tools_repo = {
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("-p", required=True)
+    p.add_argument('-p', required=True)
     args = p.parse_args()
 
     if not API_KEY:
-        raise RuntimeError("OPENROUTER_API_KEY is not set")
+        raise RuntimeError('OPENROUTER_API_KEY is not set')
 
     client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
     messages = [{'role': 'user', 'content': args.p}]
 
     while True:
         chat = client.chat.completions.create(
-            model="anthropic/claude-haiku-4.5",
+            model='anthropic/claude-haiku-4.5',
             messages=messages,
             tools=get_tools_specs()
         )
 
         if not chat.choices or len(chat.choices) == 0:
-            raise RuntimeError("no choices in response")
+            raise RuntimeError('no choices in response')
 
         message = chat.choices[0].message
         messages.append({
@@ -52,9 +52,8 @@ def main():
 
         for tool_call in message.tool_calls:
             tool = tools_repo.get(tool_call.function.name)
-            tool_args = tool_call.function.arguments
-            args = json.loads(tool_args)
-            result = tool(**args)
+            tool_args = json.loads(tool_call.function.arguments)
+            result = tool(**tool_args)
             messages.append({'role': 'tool', 'tool_call_id': tool_call.id, 'content': result})
 
 
