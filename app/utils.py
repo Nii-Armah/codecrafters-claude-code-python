@@ -9,8 +9,8 @@ def get_tools_specs() -> list:
     with open(tools_path) as tools_file:
         return json.load(tools_file)
 
-def run_bash(command: str) -> bytes:
-    result = subprocess.run([command], shell=True,  capture_output=True)
+def run_bash(command: str) -> str:
+    result = subprocess.run([command], shell=True,  capture_output=True, text=True)
     return result.stdout or result.stderr
 
 
